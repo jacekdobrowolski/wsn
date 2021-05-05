@@ -1,5 +1,6 @@
 #!/bin/bash
-screen=false;
+
+ports=( "/dev/ttyUSB0" "/dev/ttyUSB1")
 
 if [ $# -eq 0 ]; then
     echo "Wrapper for adafruit-ampy, uploading files to micropython board"
@@ -9,17 +10,16 @@ fi
 
 for var in "$@"
 do
-    if [ "$var" == "-s" ]; then
-        screen=true;
-    else
-        echo uploading "$var"
-        ampy -p /dev/ttyUSB0 put $var $var | tee -a /dev/tty
-    fi
+    declare -A pids
+    for port in "${ports[@]}"; do
+        echo "uploading $var to $port"
+        ampy -p "$port" put "$var" "$var" | tee -a /dev/tty &
+        pids[$port]="$!"
+    done
+
+    # wait for all pids
+    for port in "${!pids[@]}"; do
+        echo "waiting for $port ${pids[$port]}"
+        wait ${pids[$port]}
+    done
 done
-
-ampy -p /dev/ttyUSB0 reset | tee -a /dev/tty
-echo reset
-
-if [ "$screen" == true ]; then
-    screen /dev/ttyUSB0 115200
-fi

@@ -1,6 +1,5 @@
 def receive(lora):
     print("LoRa Receiver")
-    display = Display()
 
     while True:
         if lora.received_packet():
