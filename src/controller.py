@@ -1,11 +1,9 @@
 from time import sleep
 
 
-
 class Controller:
     class Mock:
         pass
-
 
     ON_BOARD_LED_PIN_NO = None
     ON_BOARD_LED_HIGH_IS_ON = True
@@ -25,7 +23,6 @@ class Controller:
     PIN_ID_FOR_LORA_DIO4 = None
     PIN_ID_FOR_LORA_DIO5 = None
 
-
     def __init__(self,
                  pin_id_led = ON_BOARD_LED_PIN_NO,
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
@@ -39,7 +36,6 @@ class Controller:
         self.spi = self.prepare_spi(self.get_spi())
         self.transceivers = {}
         self.blink_led(*blink_on_start)
-
 
     def add_transceiver(self,
                         transceiver,
@@ -66,7 +62,6 @@ class Controller:
         self.transceivers[transceiver.name] = transceiver
         return transceiver
 
-
     def prepare_pin(self, pin_id, in_out = None):
         reason = '''
             # a pin should provide:
@@ -78,7 +73,6 @@ class Controller:
         '''
         raise NotImplementedError(reason)
 
-
     def prepare_irq_pin(self, pin_id):
         reason = '''
             # a irq_pin should provide:
@@ -87,13 +81,11 @@ class Controller:
         '''
         raise NotImplementedError(reason)
 
-
     def get_spi(self):
         reason = '''
             # initialize SPI interface
         '''
         raise NotImplementedError(reason)
-
 
     def prepare_spi(self, spi):
         reason = '''
@@ -103,10 +95,8 @@ class Controller:
         '''
         raise NotImplementedError(reason)
 
-
     def led_on(self, on = True):
         self.pin_led.high() if self.on_board_led_high_is_on == on else self.pin_led.low()
-
 
     def blink_led(self, times = 1, on_seconds = 0.1, off_seconds = 0.1):
         for i in range(times):
@@ -115,17 +105,14 @@ class Controller:
             self.led_on(False)
             sleep(off_seconds)
 
-
     def reset_pin(self, pin, duration_low = 0.05, duration_high = 0.05):
         pin.low()
         sleep(duration_low)
         pin.high()
         sleep(duration_high)
 
-
     def reset_transceivers(self):
         self.reset_pin(self.pin_reset)
-
 
     def __exit__(self):
         self.spi.close()

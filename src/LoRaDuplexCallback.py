@@ -7,13 +7,10 @@ INTERVAL = 2000  # interval between sends
 INTERVAL_BASE = 2000  # interval between sends base
 
 
-
 def duplexCallback(lora):
     print("LoRa Duplex with callback")
     lora.onReceive(on_receive)  # register the receive callback
     do_loop(lora)
-
-
 
 def do_loop(lora):
     global msgCount
@@ -36,13 +33,9 @@ def do_loop(lora):
 
             lora.receive()  # go into receive mode
 
-
-
 def sendMessage(lora, outgoing):
     lora.println(outgoing)
     # print("Sending message:\n{}\n".format(outgoing))
-
-
 
 def on_receive(lora, payload):
     from machine import I2C, Pin
