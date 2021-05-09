@@ -5,7 +5,6 @@ ports=( "/dev/ttyUSB0" "/dev/ttyUSB1")
 if [ $# -eq 0 ]; then
     echo "Wrapper for adafruit-ampy, uploading files to micropython board"
     echo "Usage:  ./upload.sh FILES"
-    echo "Options:  -s open screen connection after uploading"
 fi
 
 for var in "$@"
@@ -19,7 +18,13 @@ do
 
     # wait for all pids
     for port in "${!pids[@]}"; do
-        echo "waiting for $port ${pids[$port]}"
-        wait ${pids[$port]}
+        PID=${pids[$port]}
+        echo "waiting for $port $PID"
+        wait $PID
     done
+done
+
+ for port in "${ports[@]}"; do
+        echo "reseting $port"
+        ampy -p "$port" reset | tee -a /dev/tty &
 done

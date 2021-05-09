@@ -1,11 +1,8 @@
 import LoRaDuplexCallback
 import config_lora
 import gc
-
-
-gc.collect()
-
 import sx127x
+
 
 gc.collect()
 
